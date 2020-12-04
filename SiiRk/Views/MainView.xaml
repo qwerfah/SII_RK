@@ -1,0 +1,378 @@
+﻿<Window x:Class="SiiRk.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SiiRk.ViewModels"
+        mc:Ignorable="d"
+        Title="MainView" Height="720" Width="1200">
+    <Window.DataContext>
+        <local:ApplicationViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.45*"/>
+            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition/>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Label 
+                Grid.Row="0"
+                Grid.Column="0"
+                Content="Текущий пользователь:"
+                FontSize="16"/>
+            <TextBox
+                x:Name="CurrentUserName"
+                Width="139" Height="25"
+                FontSize="16"
+                IsEnabled="False"
+                Text="{Binding CurrentUserName, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+        <TreeView 
+            x:Name="TreeView"
+            Margin="7"
+            Grid.Row="1"
+            Grid.RowSpan="1"
+            Grid.ColumnSpan="2"
+            ItemsSource="{Binding MemoryTreeViewItems, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label 
+            Grid.Row="2"
+            Grid.Column="3"
+            Content="Список пользователей:"
+            FontSize="16"/>
+        <ListView 
+            x:Name="Users"
+            Grid.Row="3"
+            Grid.Column="3"
+            Margin="7"
+            ItemsSource="{Binding UserItems, UpdateSourceTrigger=PropertyChanged}">
+        </ListView>
+
+        <Label 
+            Grid.Row="0"
+            Grid.Column="2"
+            Content="Сохраненные:"
+            FontSize="16"/>
+        <ListView 
+            x:Name="Favourite"
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="7"
+            ItemsSource="{Binding FavouriteItems, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label 
+            Grid.Row="2"
+            Grid.Column="2"
+            Content="Больше не предлагать:"
+            FontSize="16"/>
+        <ListView 
+            x:Name="NotShow"
+            Grid.Row="3"
+            Grid.Column="2"
+            Margin="7"
+            ItemsSource="{Binding NotShowItems, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label 
+            Grid.Row="0"
+            Grid.Column="3"
+            Content="Рекомендации:"
+            FontSize="16"/>
+        <ListView 
+            x:Name="Recomendations"
+            Grid.Row="1"
+            Grid.Column="3"
+            Margin="7"
+            ItemsSource="{Binding RecommendationsItems, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="2" Grid.RowSpan="2" Margin="7">
+            <Label 
+                Content="Путь к файлу:"
+                FontSize="16"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox 
+                    x:Name="TreePath"
+                    FontSize="16"
+                    Width="178"
+                    Text="{Binding Filename, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button 
+                    x:Name="OpenFileDialogButton"
+                    FontSize="16"
+                    Width="28"
+                    Margin="8,0,0,0"
+                    Command="{Binding OpenFileDialogCommand}">
+                    <Image Source="C:\Users\KarpukhinAS\Documents\src\СИИ\SiiRk\SiiRk\Resources\images.png"/>
+                </Button>
+            </StackPanel>
+
+            <Button 
+                x:Name="LoadTreeButton"
+                Margin="0,7,0,0"
+                Content="Загрузить дерево"
+                FontSize="16"
+                Command="{Binding LoadTreeCommand}"/>
+
+            <Label
+                Margin="0,10,0,0"
+                Content="Имя пользователя:"
+                FontSize="16"/>
+            <TextBox
+                x:Name="UserName"
+                FontSize="16"
+                Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button
+                x:Name="AddUserButton"
+                Margin="0,7,0,0"
+                Content="Добавить пользователя"
+                FontSize="16"
+                Command="{Binding AddUserCommand}"
+                CommandParameter="{Binding UserName}"/>
+            <Button
+                x:Name="ChangeUserButton"
+                Margin="0,7,0,0"
+                Content="Сменить пользователя"
+                FontSize="16"
+                Command="{Binding ChangeUserCommand}"
+                CommandParameter="{Binding UserName}"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Margin="0,5,10,0"
+                    Content="Расстояние:"
+                    FontSize="16"/>
+                <ComboBox
+                    x:Name="MeasureType"
+                    FontSize="16"
+                    Height="28"
+                    Margin="0,5,0,0"
+                    Width="125"
+                    SelectedIndex="{Binding MeasureTypeIndex, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock>Евклидово</TextBlock>
+                        <TextBlock>Манхетеннское</TextBlock>
+                        <TextBlock>По дереву</TextBlock>
+                        <TextBlock>Корреляция</TextBlock>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Content="Размер выдачи:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="NumberTextBox"
+                    Width ="50" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding RecsLength, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <Button
+                x:Name="GenerateRecommendationsButton"
+                Margin="0,7,0,0"
+                Content="Сгенерировать рекомендации"
+                FontSize="16"
+                Command="{Binding WorkCommand}"/>
+        </StackPanel>
+
+        <Label
+            Grid.Column="1"
+            Grid.Row="2"
+            Content="Настройки:"
+            FontSize="16"/>
+
+        <StackPanel
+            Grid.Column="1"
+            Grid.Row="3">
+
+            <StackPanel x:Name="stackPanel">
+                <CheckBox 
+                    x:Name="checkBox1" 
+                    Content="Коллаборативная фильтрация"
+                    IsChecked="{Binding CollaborativeOption, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox 
+                    x:Name="checkBox2" 
+                    Content="Контент-ориентированный подбор"
+                    IsChecked="{Binding ContentOption, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox 
+                    x:Name="checkBox3" 
+                    Content="Параметрический поиск" 
+                    IsChecked="{Binding SearchOption, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <Label
+                Grid.Column="1"
+                Grid.Row="2"
+                Content="Параметры поиска:"
+                FontSize="16"/>
+
+            <StackPanel 
+            Grid.Column="1"
+            Grid.Row="3"
+            Orientation="Horizontal">
+                <Label
+                    Content="Cкорость (Мб/с) от:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MinSpeedTextBox"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    Text="{Binding MinSpeed, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label
+                    Margin="10,0,0,0"
+                    Content="до:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MaxSpeedTextBox"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    Margin="10,0,0,0"
+                    Text="{Binding MaxSpeed, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel 
+            Grid.Column="1"
+            Grid.Row="3"
+            Orientation="Horizontal">
+                <Label
+                    Content="Объем (Мб) от:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MinCapacityTextBox"
+                    Margin="31,0,0,0"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding MinCapacity, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label
+                    Margin="10,0,0,0"
+                    Content="до:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MaxCapacityTextBox"
+                    Margin="10,0,0,0"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding MaxCapacity, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel
+            Grid.Column="1"
+            Grid.Row="3"
+            Orientation="Horizontal">
+                <Label
+                    Content="Год выпуска от:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MinReleaseYearTextBox"
+                    Margin="28,0,0,0"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding MinReleaseYear, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label
+                    Margin="10,0,0,0"
+                    Content="до:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MaxReleaseYearTextBox"
+                    Margin="10,0,0,0"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding MaxReleaseYear, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel 
+            Grid.Column="1"
+            Grid.Row="3"
+            Orientation="Horizontal">
+                <Label
+                    Content="Цена (Руб/Мб) от:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MinCostTextBox"
+                    Margin="11,0,0,0"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding MinCost, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label
+                    Margin="10,0,0,0"
+                    Content="до:"
+                    FontSize="16"/>
+                <TextBox 
+                    Name="MaxCostTextBox"
+                    Margin="10,0,0,0"
+                    Width ="70" 
+                    Height="25"
+                    FontSize="16"
+                    PreviewTextInput="NumberValidationTextBox"
+                    Text="{Binding MaxCost, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel 
+            Grid.Column="1"
+            Grid.Row="3"
+            Orientation="Horizontal">
+                <Label
+                    Margin="0,5,10,0"
+                    Content="Назначение:"
+                    FontSize="16"/>
+                <ComboBox
+                    x:Name="ApplicationType"
+                    FontSize="16"
+                    Height="28"
+                    Margin="40,5,0,0"
+                    Width="192"
+                    SelectedIndex="{Binding Application, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock>Общее (устройства хранения)</TextBlock>
+                    <TextBlock>Специализированное</TextBlock>
+                    <TextBlock>Любое</TextBlock>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel 
+            Grid.Column="1"
+            Grid.Row="3"
+            Orientation="Horizontal">
+                <Label
+                    Margin="0,5,10,0"
+                    Content="Тип памяти:"
+                    FontSize="16"/>
+                <ComboBox
+                    x:Name="MemoryType"
+                    FontSize="16"
+                    Height="28"
+                    Margin="44,5,0,0"
+                    Width="192"
+                    SelectedIndex="{Binding MemoryType, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock>Оперативная память</TextBlock>
+                    <TextBlock>Графическая память</TextBlock>
+                    <TextBlock>Память микроконтроллеров</TextBlock>
+                    <TextBlock>Кэш-память</TextBlock>
+                    <TextBlock>Вторичная память</TextBlock>
+                    <TextBlock>Любой</TextBlock>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
